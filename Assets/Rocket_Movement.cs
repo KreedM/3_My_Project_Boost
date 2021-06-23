@@ -6,11 +6,13 @@ using UnityEngine;
 public class Rocket_Movement : MonoBehaviour
 {
     Rigidbody rigidBody;
+    AudioSource audioSource;
 
     // Start is called before the first frame update
     void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -24,7 +26,11 @@ public class Rocket_Movement : MonoBehaviour
         if (Input.GetKey(KeyCode.Space))
         {
             rigidBody.AddRelativeForce(Vector3.up);
+            if (!audioSource.isPlaying) //Prevents layering - new clips playing every single frame
+                audioSource.Play();
         }
+        else
+            audioSource.Pause();
         
         if (Input.GetKey(KeyCode.D))
         {
