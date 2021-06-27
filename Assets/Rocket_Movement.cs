@@ -18,7 +18,7 @@ public class Rocket_Movement : MonoBehaviour
         audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+    // FixedUpdate() depends on FixedTimeStep (default 0.2s 50fps), put physics/rigidbody manipulations in here.
     void FixedUpdate()
     {
         checkThrust();
@@ -34,7 +34,7 @@ public class Rocket_Movement : MonoBehaviour
                 audioSource.Play();
         }
         else
-            audioSource.Pause();
+            audioSource.Stop();
     }
     
     void checkRotate()
@@ -51,5 +51,14 @@ public class Rocket_Movement : MonoBehaviour
         }
 
         rigidBody.freezeRotation = false;
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        switch(collision.gameObject.tag)
+        {
+            case "Friendly": print("OK."); break;
+            default: print("Dead."); break;
+        }
     }
 }
