@@ -7,6 +7,9 @@ public class Rocket_Movement : MonoBehaviour
 {
     Rigidbody rigidBody;
     AudioSource audioSource;
+    
+    [SerializeField] float rcsThrust = 2f;
+    [SerializeField] float mainThrust = 1f;
 
     // Start is called before the first frame update
     void Start()
@@ -16,29 +19,37 @@ public class Rocket_Movement : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
-        ProcessInput();
+        checkThrust();
+        checkRotate();
     }
 
-    private void ProcessInput()
+    void checkThrust()
     {
         if (Input.GetKey(KeyCode.Space))
         {
-            rigidBody.AddRelativeForce(Vector3.up);
+            rigidBody.AddRelativeForce(mainThrust * Vector3.up);
             if (!audioSource.isPlaying) //Prevents layering - new clips playing every single frame
                 audioSource.Play();
         }
         else
             audioSource.Pause();
-        
+    }
+    
+    void checkRotate()
+    {
+        rigidBody.freezeRotation = true; //Pause physics rotation in case rocket hits obstacle (won't madly rotate
+
         if (Input.GetKey(KeyCode.D))
         {
-            transform.Rotate(50 * Vector3.back * Time.deltaTime); //Forward means Z axis
+            transform.Rotate(rcsThrust * Vector3.back); //Forward means Z axis
         }
         else if (Input.GetKey(KeyCode.A))
         {
-            transform.Rotate(50 * Vector3.forward * Time.deltaTime); //Forward means Z axis
+            transform.Rotate(rcsThrust * Vector3.forward); //Forward means Z axis
         }
+
+        rigidBody.freezeRotation = false;
     }
 }
